@@ -1,11 +1,12 @@
 // ==UserScript==
-// @name             【小凤聋人制作YY红色图标】 全网VIP视频免费解析，视频自动跳过广告，高清电视频道免费看
-// @name:zh-TW       【小凤聋人制作YY红色图标】 全網VIP視頻免費解析，視頻自動跳過廣告，高清電視頻道免費看
-// @version           更新：【2025年3月18日】 版本1.6.2
+// @name              【小凤聋人制作YY红色图标】 全网VIP视频免费解析，视频自动跳过广告，高清电视频道免费看
+// @name:zh-TW        【小凤聋人制作YY红色图标】 全网VIP视频免费解析，视频自动跳过广告，高清电视频道免费看
+// @namespace         https://azkou.cn
 //@icon         https://qlogo2.store.qq.com/qzone/157903109/157903109/50?1663513516
+// @version           更新：【2025年5月21日】 版本1.8.4
 // @description       爱奇艺、腾讯、优酷、芒果等全网VIP视频免费破解去广告；B站大会员，番剧解锁;B站、A站视频解析下载；高清电视频道观看(CCTV、湖南卫视等100多个台)；
 // @description:zh-TW 愛奇藝、騰訊、優酷、芒果等全網VIP視頻免費破解去廣告；B站大會員，番劇解鎖；B站、A站視頻解析下載；高清電視頻道觀看（CCTV、湖南衛視等100多個臺）；
-// @author            小陶
+// @author            azkou
 // @include           *://xbeibeix.com/api/bilibili/biliplayer/*
 // @include           *://xbeibeix.com/api/bilibili/*
 // @include           *://*.youku.com/v_*
@@ -49,25 +50,44 @@
 // @include           *://m.bilibili.com/anime/*
 // @include           *://m.bilibili.com/bangumi/play/*
 // @include           *://m.wasu.cn/Play/show/*
-// @require           https://lib.baomitu.com/jquery/1.8.3/jquery.min.js
-// @require           https://lib.baomitu.com/jquery.qrcode/1.0/jquery.qrcode.min.js
-// @connect           idey.cn
+// @include        *://*.jd.com/*
+// @include        *://*.jd.hk/*
+// @include      *://*.jkcsjd.com/*
+// @include        *://*.taobao.com/*
+// @include        *://*.taobao.hk/*
+// @include        *://*.tmall.com/*
+// @include        *://*.tmall.hk/*
+// @include             *://chaoshi.detail.tmall.com/*
+// @include             *://*.liangxinyao.com/*
+// @include             *://*.yiyaojd.com/*
+// @exclude       *://login.taobao.com/*
+// @exclude       *://pages.tmall.com/*
+// @exclude       *://uland.taobao.com/*
+// @require           https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js
+// @require https://cdn.bootcdn.net/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js
 // @grant             unsafeWindow
 // @grant             GM_openInTab
 // @grant             GM.openInTab
 // @grant             GM_getValue
 // @grant             GM_setValue
-// @grant             GM_addStyle
+// @grant        GM_addStyle
 // @grant             GM.xmlHttpRequest
-// @grant             GM_xmlhttpRequest
 // @grant             GM_registerMenuCommand
 // @license           GPL License
+// @antifeature referral-link 内部隐藏优惠卷
 // ==/UserScript==
 (function() {
 	'use strict';
+	//*******************提示*************//
+	//如遇到问题或者有什么优化建议请联系我//
+	//这样才能够更好的完善改脚本，让大家使//
+	//用起来更方便，谢谢大家。//
+
 	var index_num = 0,item = [],urls = [],
 	playerList=[
-		{"name": "虾米", "type": "1-2", "url": "https://jx.xmflv.com/?url="},
+
+
+        {"name": "虾米", "type": "1-2", "url": "https://jx.xmflv.com/?url="},
 		{"name": "虾米2", "type": "1-2", "url": "https://jx.xmflv.cc/?url="},
 		{"name": "夜幕", "type": "1-2-3", "url": "https://www.yemu.xyz/?url="},
         {"name": "CK", "type": "1-2", "url": "https://www.ckplayer.vip/jiexi/?url="},
@@ -80,20 +100,21 @@
 		{"name": "Ckplayer", "type": "1-2-3", "url": "https://www.ckplayer.vip/jiexi/?url="},
         {"name": "零点", "type": "1-2-3", "url": "http://www.jzmhtt.com/zdy/vip/?url="},
         {"name": "神哥", "type": "1-2", "url": " https://json.ovvo.pro/jx.php?url="},
-		 {"name": "剖元", "type": "1-2", "url": "https://www.pouyun.com/?url="},
-        		 {"name": "？？", "type": "1-2", "url": "https://jx.m3u8.tv/jiexi/?url="},
+		{"name": "剖元", "type": "1-2", "url": "https://www.pouyun.com/?url="},
+        {"name": "？？", "type": "1-2", "url": "https://jx.m3u8.tv/jiexi/?url="},
         {"name": "Player-JY", "type": "1-2", "url": "https://jx.playerjy.com/?url="},
         {"name": "大米", "type": "1-2", "url": "https://jx.dmflv.cc/?url="},
         {"name": "云云", "type": "1-2", "url": "https://jx.77flv.cc/?url="},
         {"name": "973", "type": "1-2", "url": "https://jx.973973.xyz/?url="},
-       {"name": "螃蟹解析", "type": "1-2", "url": "https://jx.pxjx.cc/?url="},
+        {"name": "螃蟹解析", "type": "1-2", "url": "https://jx.pxjx.cc/?url="},
         {"name": "红狐资源网", "type": "2", "url": "https://rdfplayer.mrgaocloud.com/player/?url="},
+
         ],
 		node=[
 			{"url":"w.mgtv.com","type": "1","node":"#mgtv-player-wrap"},
 			{"url":"www.mgtv.com","type": "1","node":"#mgtv-player-wrap"},
 			{"url":"m.mgtv.com","type": "2","node":".mg-video"},
-			{"url": "www.iqiyi.com","type": "1","node": "#flashbox"},
+			{"url": "www.iqiyi.com","type": "1","node": "#flashbox|#player|.iqp-player-videolayer-inner"},
 			{"url":"www.iq.com","type": "1","node":".intl-video-wrap"},
 			{"url": "m.iqiyi.com","type": "2","node": ".m-video-player"},
 			{"url":"v.youku.com","type": "1","node":"#player"},
@@ -122,7 +143,933 @@
 			{"url":"m.bilibili.com","type": "2","node":".player-wrapper"},
 
 		];
+	const coupon = {
+	isClose: false,
+	isRun: () => {
+		var urls = ["tmall.com", "taobao.com", "tmall.hk", "liangxinyao.com", "jd.com", "jd.hk", "yiyaojd.com"];
+		for (var i = 0; i < urls.length; i++) {
+			if (window.location.host.indexOf(urls[i]) != -1) {
+				return true;
+			}
+		}
+		return false;
+	},
+    getUrlParam : (name)=> {
+         var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == name){return pair[1];}
+        }
+        return(false);
+    },
+	initCss: () => {
+		let css = `
+				.gwd_taobao .gwd-minibar-bg, .gwd_tmall .gwd-minibar-bg {
+					display: block;
+				}
+				.idey-minibar_bg{
+					position: relative;
+					min-height: 40px;
+					display: inline-block;
+				}
+				#idey_minibar{
+					width: 525px;
+					background-color: #fff;
+					position: relative;
+					border: 1px solid #e8e8e8;
+					display: block;
+					line-height: 36px;
+					font-family: 'Microsoft YaHei',Arial,SimSun!important;
+					height: 36px;
+					float: left;
+				}
+				#idey_minibar .idey_website {
+					width: 48px;
+					float: left;
+					height: 36px;
+				}
+				#idey_minibar .minibar-tab {
+					float: left;
+					height: 36px;
+					border-left: 1px solid #edf1f2!important;
+					padding: 0;
+					margin: 0;
+					text-align: center;
+				}
 
+				#idey_minibar .idey_website em {
+					background-position: -10px -28px;
+					height: 36px;
+					width: 25px;
+					float: left;
+					margin-left: 12px;
+				}
+				.setting-bg {
+					background: url(https://cdn.gwdang.com/images/extensions/xbt/new_wishlist_pg5_2.png) no-repeat;
+				}
+				#idey_minibar .minibar-tab {
+					float: left;
+					height: 36px;
+					border-left: 1px solid #edf1f2!important;
+					padding: 0;
+					margin: 0;
+					width: 134px;
+				}
+				#idey_price_history span {
+					float: left;
+					width: 100%;
+					text-align: center;
+					line-height: 36px;
+					color: #666;
+					font-size: 14px;
+				}
+
+				#mini_price_history .trend-error-info-mini {
+					position: absolute;
+					top: 37px;
+					left: 0px;
+					width: 100%;
+					background: #fff;
+					z-index: 99999999;
+					height: 268px;
+					box-shadow: 0px 5px 15px 0 rgb(23 25 27 / 15%);
+					border-radius: 0 0 4px 4px;
+					width:559px;
+					border: 1px solid #ddd;
+					border-top: none;
+					display:none;
+
+				}
+				.minibar-btn-box {
+					display: inline-block;
+					margin: 0 auto;
+					float: none;
+				}
+				#mini_price_history .error-p {
+					  width: 95px;
+					  margin: 110px auto;
+					  height: 20px;
+					  line-height: 20px;
+					  text-align: center;
+					  color: #000!important;
+					  border: 1px solid #333;
+					  border-radius: 5px;
+					  display: block;
+					  text-decoration: none!important;
+					}
+				 #mini_price_history:hover .trend-error-info-mini {
+					  display: block;
+					}
+
+				.collect_mailout_icon {
+					background-position: -247px -134px;
+					width: 18px;
+				}
+
+				#idey_mini_compare_detail li *, .mini-compare-icon, .minibar-btn-box * {
+					float: left;
+				}
+				.panel-wrap{
+					width: 100%;
+					height: 100%;
+				}
+				.collect_mailout_icon, .mini-compare-icon {
+					height: 18px;
+					margin-right: 8px;
+					margin-top: 9px;
+				}
+				.all-products ul li {
+					float: left;
+					width: 138px;
+					height: 262px;
+					overflow: hidden;
+					text-align: center;
+				}
+				.all-products ul li .small-img {
+					text-align: center;
+					display: table-cell;
+					vertical-align: middle;
+					line-height: 90px;
+					width: 100%;
+					height: 100px;
+					position: relative;
+					float: left;
+					margin-top: 23px;
+				}
+				.all-products ul li a img {
+					vertical-align: middle;
+					display: inline-block;
+					width: auto;
+					height: auto;
+					max-height: 100px;
+					max-width: 100px;
+					float: none;
+				}
+				.all-products ul li a.b2c-other-info {
+					text-align: center;
+					float: left;
+					height: 16px;
+					line-height: 16px;
+					margin-top: 13px;
+				}
+
+				.b2c-other-info .gwd-price {
+					height: 17px;
+					line-height: 17px;
+					font-size: 16px;
+					color: #E4393C;
+					font-weight: 700;
+					width: 100%;
+					display: block;
+				}
+				.b2c-other-info .b2c-tle {
+					height: 38px;
+					line-height: 19px;
+					margin-top: 8px;
+					font-size: 12px;
+					width: 138px;
+					margin-left: 29px;
+				}
+				 .bjgext-mini-trend span {
+					  float: left;
+					  /*width: 100%;*/
+					  text-align: center;
+					  line-height: 36px;
+					  color: #666;
+					  font-size: 14px;
+					}
+					.bjgext-mini-trend .trend-error-info-mini {
+					  position: absolute;
+					  top: 37px;
+					  left: 0px;
+					  width: 100%;
+					  background: #fff;
+					  z-index: 99999999;
+					  height: 268px;
+					  display: none;
+					  box-shadow: 0px 5px 15px 0 rgba(23,25,27,0.15);
+					  border-radius: 0 0 4px 4px;
+					  width: 460px;
+					  border: 1px solid #ddd;
+					  border-top: none;
+					}
+					.bjgext-mini-trend .error-p {
+					  width: 100%;
+					  float: left;
+					  text-align: center;
+					  margin-top: 45px;
+					  font-size: 14px;
+					  color: #666;
+					}
+					.bjgext-mini-trend .error-sp {
+					  width: 95px;
+					  margin: 110px auto;
+					  height: 20px;
+					  line-height: 20px;
+					  text-align: center;
+					  color: #000!important;
+					  border: 1px solid #333;
+					  border-radius: 5px;
+					  display: block;
+					  text-decoration: none!important;
+					}
+					.bjgext-mini-trend:hover .trend-error-info-mini {
+					  display: block;
+					}
+					#coupon_box.coupon-box1 {
+					  width: 525px;
+					  height: 125px;
+					  background-color: #fff;
+					  border: 1px solid #e8e8e8;
+					  border-top: none;
+					  position: relative;
+					  margin: 0px;
+					  padding: 0px;
+					  float: left;
+					  display: block;
+					}
+					#coupon_box:after {
+					  display: block;
+					  content: "";
+					  clear: both;
+					}
+					.idey_tmall #idey_minibar {
+					  float: none;
+					}
+
+
+					.minicoupon_detail {
+					  position: absolute;
+					  top: 35px;
+					  right: -1px;
+					  height: 150px;
+					  width: 132px;
+					  display: none;
+					  z-index: 99999999999;
+					  background: #FFF7F8;
+					  border: 1px solid #F95774;
+					}
+					#coupon_box:hover .minicoupon_detail {
+					  display: block;
+					}
+					.minicoupon_detail img {
+					  width: 114px;
+					  height: 114px;
+					  float: left;
+					  margin-left: 9px;
+					  margin-top: 9px;
+					}
+					.minicoupon_detail span {
+					  font-size: 14px;
+					  color: #F95572;
+					  letter-spacing: 0;
+					  font-weight: bold;
+					  float: left;
+					  height: 12px;
+					  line-height: 14px;
+					  width: 100%;
+					  margin-top: 6px;
+					  text-align: center;
+					}
+					.coupon-box1 * {
+					  font-family: 'Microsoft YaHei',Arial,SimSun;
+					}
+					.coupon-icon {
+					  float: left;
+					  width: 20px;
+					  height: 20px;
+					  background: url('https://cdn.gwdang.com/images/extensions/newbar/coupon_icon.png') 0px 0px no-repeat;
+					  margin: 50px 8px 9px 12px;
+					}
+					#coupon_box .coupon-tle {
+					  color: #FF3B5C;
+					  font-size: 24px;
+					  margin-right: 11px;
+					  float: left;
+					  height: 114px;
+					  overflow: hidden;
+					  text-overflow: ellipsis;
+					  white-space: nowrap;
+					  width: 375px;
+					  line-height: 114px;
+					  text-decoration: none!important;
+					}
+					#coupon_box .coupon-row{
+						 color: #FF3B5C;
+					  font-size: 12px;
+					  margin-right: 11px;
+					  float: left;
+					  height: 60px;
+					  overflow: hidden;
+					  text-overflow: ellipsis;
+					  white-space: nowrap;
+					  width: 100%;
+					  line-height: 60px;
+					  text-decoration: none!important;
+						text-align: center;
+					}
+					#coupon_box .coupon-tle * {
+					  color: #f15672;
+					}
+					#coupon_box .coupon-tle span {
+					  margin-right: 5px;
+					  font-weight: bold;
+					  font-size: 14px;
+					}
+					.coupon_gif {
+					  background: url('https://cdn.gwdang.com/images/extensions/newbar/turn.gif') 0px 0px no-repeat;
+					  float: right;
+					  height: 20px;
+					  width: 56px;
+					  margin-top: 49px;
+					}
+					.click2get {
+					  background: url('https://cdn.gwdang.com/images/extensions/newbar/coupon_01.png') 0px 0px no-repeat;
+					  float: left;
+					  height: 30px;
+					  width: 96px;
+					  margin-top: 43px;
+					}
+					.click2get span {
+					  height: 24px;
+					  float: left;
+					  margin-left: 1px;
+					}
+					.c2g-sp1 {
+					  width: 50px;
+					  color: #FF3B5C;
+					  text-align: center;
+					  font-size: 14px;
+					  line-height: 24px!important;
+					}
+					.c2g-sp2 {
+					  width: 44px;
+					  line-height: 24px!important;
+					  color: #fff!important;
+					  text-align: center;
+					}
+					div#idey_wishlist_div.idey_wishlist_div {
+					  border-bottom-right-radius: 0px;
+					  border-bottom-left-radius: 0px;
+					}
+					#qrcode{
+						 float: left;
+						width: 125px;
+						margin-top:3px;
+					}
+					.elm_box{
+						height: 37px;
+					 border: 1px solid #ddd;
+					 width: 460px;
+					 line-height: 37px;
+					 margin-bottom: 3px;
+						 background-color: #ff0036;
+							 font-size: 15px;
+					}
+					.elm_box span{
+							width: 342px;
+					text-align: center;
+					display: block;
+					float: left;
+					color: red;
+					color: white;
+					}
+				`;
+		let styles = document.createElement('style')
+		styles.type = 'text/css'
+		styles.innerHTML = css;
+		document.getElementsByTagName('head').item(0).appendChild(styles)
+	},
+	onclicks: (link) => {
+		if (document.getElementById('redirect_form')) {
+			var form = document.getElementById('redirect_form');
+			form.action = 'https://wk.idey.cn/red.html?url=' + encodeURIComponent(link);
+		} else {
+			var form = document.createElement('form');
+			form.action = 'https://wk.idey.cn/red.html?url=' + encodeURIComponent(link);
+			form.target = '_blank';
+
+			form.method = 'POST';
+			form.setAttribute("id", 'redirect_form');
+			document.body.appendChild(form);
+
+		}
+		form.submit();
+		form.action = "";
+		form.parentNode.removeChild(form);
+	},
+	getUrlType: (url) => {
+		if (
+			url.indexOf("//item.taobao.com/item.htm") > 0 ||
+			url.indexOf("//detail.tmall.com/item.htm") > 0 ||
+			url.indexOf("//chaoshi.detail.tmall.com/item.htm") > 0 ||
+			url.indexOf("//detail.tmall.hk/hk/item.htm") > 0 ||
+			url.indexOf("//world.tmall.com") > 0 ||
+			url.indexOf("//detail.liangxinyao.com/item.htm") > 0 ||
+			url.indexOf("//detail.tmall.hk/item.htm") > 0
+		) {
+			return 'taobao_item';
+		} else if (
+			url.indexOf("//maiyao.liangxinyao.com/shop/view_shop.htm") > 0 ||
+			url.indexOf("//list.tmall.com/search_product.htm") > 0 ||
+			url.indexOf("//s.taobao.com/search") > 0 ||
+			url.indexOf("//list.tmall.hk/search_product.htm") > 0
+		) {
+			return 'taobao_list';
+		} else if (
+			url.indexOf("//search.jd.com/Search") > 0 ||
+			url.indexOf("//search.jd.com/search") > 0 ||
+			url.indexOf("//search.jd.hk/search") > 0 ||
+			url.indexOf("//search.jd.hk/Search") > 0 ||
+			url.indexOf("//www.jd.com/xinkuan") > 0 ||
+			url.indexOf("//list.jd.com/list.html") > 0 ||
+			url.indexOf("//search.jd.hk/Search") > 0 ||
+			url.indexOf("//coll.jd.com") > 0
+		) {
+			return 'jd_list';
+		} else if (
+			url.indexOf("//item.jd.hk") > 0 ||
+			url.indexOf("//pcitem.jd.hk") > 0 ||
+			url.indexOf("//i-item.jd.com") > 0 ||
+			url.indexOf("//item.jd.com") > 0 ||
+			url.indexOf("//npcitem.jd.hk") > 0 ||
+			url.indexOf("//item.yiyaojd.com") > 0
+		) {
+			return 'jd_item';
+		} else if (
+			url.indexOf("//miaosha.jd.com") > 0
+		) {
+			return 'jd_miaosha';
+		} else if (
+			url.indexOf("//www.jd.com") > 0 ||
+			url.indexOf("//jd.com") > 0
+		) {
+			return 'jd_index';
+		} else if (
+			url.indexOf("//jingfen.jd.com") > 0
+		) {
+			return 'jingfen';
+		}
+	},
+	get_url: () => {
+		item[index_num] = [];
+		urls[index_num] = [];
+		$("#J_goodsList li").each(function(index) {
+			if ($(this).attr('data-type') != 'yes') {
+				var skuid = $(this).attr('data-sku');
+				var itemurl = '//item.jd.com/' + skuid + '.html';
+				if (skuid != undefined) {
+					if (urls[index_num].length < 4) {
+						item[index_num].push($(this));
+						urls[index_num].push(itemurl);
+						$(this).attr('data-type', 'yes');
+					}
+				}
+			}
+		})
+		$("#plist li").each(function(index) {
+			if ($(this).attr('data-type') != 'yes') {
+				var skuid = $(this).find('.j-sku-item').attr('data-sku');
+				var itemurl = '//item.jd.com/' + skuid + '.html';
+				if (skuid != undefined) {
+					if (urls[index_num].length < 4) {
+						item[index_num].push($(this));
+						urls[index_num].push(itemurl);
+						$(this).attr('data-type', 'yes');
+					}
+				}
+			}
+		})
+		$(".m-aside .aside-bar li").each(function(index) {
+			if ($(this).attr('data-type') != 'yes') {
+				var itemurl = $(this).find("a").attr('href');
+				if (itemurl != '') {
+					if (itemurl.indexOf("//ccc-x.jd.com") != -1) {
+						var sku_c = $(this).attr('sku_c');
+						if (sku_c == undefined) {
+							var arr = [];
+							var str = $(this).attr('onclick');
+							arr = str.split(",");
+							sku_c = tools.trim(arr[6].replace(/\"/g, ""));
+							itemurl = '//item.jd.com/' + sku_c + '.html';
+						}
+
+					}
+					if (urls[index_num].length < 4) {
+						item[index_num].push($(this));
+						urls[index_num].push(itemurl);
+						$(this).attr('data-type', 'yes');
+					}
+				}
+			}
+		})
+		$(".goods-chosen-list li").each(function(index) {
+			if ($(this).attr('data-type') != 'yes') {
+				var itemurl = $(this).find("a").attr('href');
+				if (itemurl != '') {
+					if (itemurl.indexOf("//ccc-x.jd.com") != -1) {
+						var arr = [];
+						var str = $(this).attr('onclick');
+						arr = str.split(",");
+						var sku_c = tools.trim(arr[6].replace(/\"/g, ""));
+						itemurl = '//item.jd.com/' + sku_c + '.html';
+					}
+					if (urls[index_num].length < 4) {
+						item[index_num].push($(this));
+						urls[index_num].push(itemurl);
+						$(this).attr('data-type', 'yes');
+					}
+				}
+			}
+
+		})
+		$(".may-like-list li").each(function(index) {
+			if ($(this).attr('data-type') != 'yes') {
+				var itemurl = $(this).find("a").attr('href');
+				if (itemurl != '') {
+					if (itemurl.indexOf("//ccc-x.jd.com") != -1) {
+						var arr = [];
+						var str = $(this).attr('onclick');
+						arr = str.split(",");
+						var sku_c = tools.trim(arr[6].replace(/\"/g, ""));
+						itemurl = '//item.jd.com/' + sku_c + '.html';
+					}
+					if (urls[index_num].length < 4) {
+						item[index_num].push($(this));
+						urls[index_num].push(itemurl);
+						$(this).attr('data-type', 'yes');
+					}
+				}
+			}
+		})
+		if (urls.length > 0 && urls[index_num].length > 0 && item[index_num].length > 0) {
+			var u = urls[index_num].join(',');
+			$.getJSON('https://tbao.idey.cn/coupon.php', {
+				act: 'itemlink',
+				itemurl: u,
+				num: index_num
+			}, function(res) {
+				if (res.type == 'success') {
+					for (var i = 0; i < res.data.length; i++) {
+						item[res.num][i].find("a").attr('data-ref', res.data[i].longUrl);
+						item[res.num][i].find("a").attr('target', '');
+						item[res.num][i].find("a").unbind("click");
+						item[res.num][i].find("a").bind("click", function(e) {
+							if ($(this).attr('data-ref')) {
+								e.preventDefault();
+								coupon.onclicks($(this).attr('data-ref'));
+
+							}
+						})
+					}
+				}
+			})
+		}
+		index_num += 1;
+	},
+	get_taobao_id:(pagetype, url)=>{
+			var return_data = '';
+			if (pagetype == 'taobao_item') {
+				var params = location.search.split("?")[1].split("&");
+				for (var index in params) {
+					if (params[index].split("=")[0] == "id") {
+						var productId = params[index].split("=")[1];
+					}
+				}
+				return_data = productId;
+			}
+			return return_data;
+		},
+
+
+	show: () => {
+		var pagetype = coupon.getUrlType(location.href);
+		if (pagetype == 'taobao_item') {
+			coupon.initCss();
+			var productId = coupon.get_taobao_id(pagetype, location.href);
+			var couponurl = "https://s.idey.cn/ltb.php?act=items&itemurl=" + encodeURIComponent(location.href) +
+			'&itemid=' +
+			productId;
+		$.getJSON(couponurl, function(res) {
+			var data = res.data;
+
+			if (res.type == 'success') {
+                var couponArea = '<div class="idey-minibar_bg">';
+			couponArea += '<div id="idey_minibar" class="alisite_page">';
+			couponArea +=
+				'<a class="idey_website"  id="idey_website_icon" target="_blank" href="https://taobao.idey.cn">';
+			couponArea += '<em class="setting-bg website_icon"></em></a>';
+			couponArea += '<div  id="mini_price_history" class="minibar-tab">';
+
+
+
+			couponArea +=
+				'<span class="blkcolor1">当前价:<span style="color:red" id="now_price">加载中...</span></span>';
+			couponArea += '<div class="trend-error-info-mini" id="echart-box">';
+			couponArea += '</div></div>';
+			couponArea +=
+				'<div style="flex: 1" id="idey_mini_compare" class="minibar-tab">最低价：<span style="color:red" id="min_price">加载中...</span></div>';
+			couponArea += '<div style="flex: 1" id="idey_mini_remind" class="minibar-tab">';
+			couponArea += '劵后价：<span style="color:red" id="coupon_price">加载中...</span>';
+
+			couponArea += ' </div></div>';
+			couponArea +=
+				' <div class="idey-mini-placeholder idey-price-protect"></div><div id="promo_box"></div>';
+
+
+					couponArea +=
+						'<a id="coupon_box" title="" class="coupon-box1" href="https://zbhui.cn/coupon.php?itemurl=' +
+						encodeURIComponent(location.href) + '&itemid='+productId+'">';
+					couponArea += '<span class="coupon-icon"></span>';
+					couponArea += ' <div class="coupon-tle"> <span>当前商品领券立减' + data.couponAmount +
+						'元</span> <em class="coupon_gif"></em></div>';
+					couponArea += '<div class="click2get"><span class="c2g-sp1">￥' + data.couponAmount +
+						'</span><span class="c2g-sp2">领取</span></div>';
+					couponArea += '</a>';
+                	couponArea += '</div>';
+
+			}
+
+
+
+			if (data.alist.length > 0) {
+				for (let i = 0; i < data.alist.length; i++) {
+					couponArea +=
+						'<div style="border:1px solid red;line-height:60px;color:red;font-size:20px;text-align:center;width:525px"><a href="' +
+						data.alist[i].url + '" target="_blank">' + data.alist[i].name + '</a></div>'
+				}
+			}
+            setTimeout(function(){
+                if (location.href.indexOf("//detail.tmall") != -1) {
+                    if ($('div').is('.tm-fcs-panel')) {
+                         $(".tm-fcs-panel").after(couponArea);
+                    }else if($('div').is('.Promotion--root--3qHQal')){
+                         $(".Promotion--root--3qHQalP").after(couponArea);
+                    }else if($('div').is('.Price--root--1CrVGjc')){
+                         $(".Price--root--1CrVGjc").after(couponArea);
+                    }
+                } else {
+                     if ($('div').is('ul.tb-meta')) {
+                         $("ul.tb-meta").after(couponArea);
+                    }else if($('div').is('.Promotion--root--3qHQal')){
+                         $(".Promotion--root--3qHQalP").after(couponArea);
+                    }else if($('div').is('.Price--root--1CrVGjc')){
+                         $(".Price--root--1CrVGjc").after(couponArea);
+                    }
+                }
+                if (data.originalPrice) {
+                    $("#now_price").html('¥' + data.originalPrice);
+                }
+                if (data.actualPrice) {
+                    $("#coupon_price").html('¥' + data.actualPrice);
+                }
+            }, 1000 )
+			 if(data.shortUrl){
+					let hbm='<div style="position:fixed;width:170px;height:170px;right:28px;bottom:10px;z-index: 99999999;"><h1 style="color:red;font-size: 11px">使用淘宝APP领劵购买此商品</h1><div id="hbcode"></div></div>';
+															$("body").append(hbm);
+															$("#hbcode").qrcode({
+																	render: "canvas", //也可以替换为table
+																	width: 160,
+																	height: 150,
+																	text: data.shortUrl
+																});
+																}
+
+		});
+		} else if (pagetype == 'jd_item') {
+			coupon.initCss();
+			var productId = /(\d+)\.html/.exec(window.location.href)[1];
+		var couponurl = "https://tbao.idey.cn/jd.php?act=recovelink&itemurl=" + encodeURIComponent(location.href) +
+			'&itemid=' + productId;
+		$.getJSON(couponurl, function(res) {
+			var data = res.data;
+			if (!tools.GetQueryString('utm_campaign') && data) {
+				window.location.href = 'https://wk.idey.cn/red.html?url=' + encodeURIComponent(data);
+			}
+
+		});
+		var couponurls = "https://s.idey.cn/xjd.php?act=item&itemurl=" + encodeURIComponent(location.href) +
+			'&itemid=' + productId;
+
+		$.getJSON(couponurls, function(res) {
+			var data = res.data;
+
+			if (res.type == 'success') {
+                var couponArea = '<div class="idey-minibar_bg">';
+                couponArea += '<div id="idey_minibar" class="alisite_page">';
+                couponArea +=
+                    '<a class="idey_website"  id="idey_website_icon" target="_blank" href="https://www.idey.cn">';
+                couponArea += '<em class="setting-bg website_icon"></em></a>';
+                couponArea += '<div  id="mini_price_history" class="minibar-tab">';
+
+
+
+                couponArea +=
+                    '<span class="blkcolor1">当前价:<span style="color:red" id="now_price">加载中...</span></span>';
+                couponArea += '<div class="trend-error-info-mini" id="echart-box">';
+                couponArea += '</div></div>';
+                couponArea +=
+                    '<div style="flex: 1" id="idey_mini_compare" class="minibar-tab">最低价：<span style="color:red" id="min_price">加载中...</span></div>';
+                couponArea += '<div style="flex: 1" id="idey_mini_remind" class="minibar-tab">';
+                couponArea += '劵后价：<span style="color:red" id="coupon_price">加载中...</span>';
+
+                couponArea += ' </div></div>';
+                couponArea +=
+                    ' <div class="idey-mini-placeholder idey-price-protect"></div><div id="promo_box"></div>';
+
+				if (data.couponLinkType == 1) {
+					couponArea +=
+						'<a id="coupon_box" title="" class="coupon-box1" href="' + data.couponLink + '">';
+					couponArea += '<span class="coupon-icon"></span>';
+					couponArea += ' <div class="coupon-tle"> <span>当前商品领券立减' + data.couponAmount +
+						'元</span> <em class="coupon_gif"></em></div>';
+					couponArea += '<div class="click2get"><span class="c2g-sp1">￥' + data.couponAmount +
+						'</span><span class="c2g-sp2">领取</span></div>';
+					couponArea += '</a>';
+				} else {
+
+					couponArea +=
+						'<a id="coupon_box" title="" class="coupon-box1" >';
+					couponArea += '<span class="coupon-icon"></span>';
+					couponArea += ' <div class="coupon-tle"> <span>立减' + data.couponAmount +
+						'元(京东扫码领取)</span> <em class="coupon_gif"></em></div>';
+					couponArea += '<div id="qrcode"></div>';
+					couponArea += '</a>';
+				}
+                couponArea += '</div>';
+
+			}
+
+
+			if (data.alist.length > 0) {
+				for (let i = 0; i < data.alist.length; i++) {
+					couponArea +=
+						'<div style="border:1px solid red;line-height:60px;color:red;font-size:20px;text-align:center;width:525px"><a href="' +
+						data.alist[i].url + '" target="_blank">' + data.alist[i].name + '</a></div>'
+				}
+			}
+            setTimeout(function(){
+
+			$(".summary-price-wrap").after(couponArea);
+            },500)
+
+			if (data.couponLink) {
+				$('#qrcode').qrcode({
+					render: "canvas", //也可以替换为table
+					width: 125,
+					height: 120,
+					text: data.couponLink
+				});
+
+			} else if (data.item_link.shortUrl) {
+				$('#qrcode').qrcode({
+					render: "canvas", //也可以替换为table
+					width: 125,
+					height: 120,
+					text: data.item_link.shortUrl
+				});
+			} else {
+				$('#qrcode').qrcode({
+					render: "canvas", //也可以替换为table
+					width: 125,
+					height: 120,
+					text: data.item_link.longUrl
+				});
+			}
+			if (data.item_link.originalPrice) {
+				$("#now_price").html('¥' + data.item_link.originalPrice);
+			}
+			if (data.item_link.actualPrice) {
+				$("#coupon_price").html('¥' + data.item_link.actualPrice);
+			}
+			if(data.hbcode !=''){
+				let hbm='<div style="position:fixed;width:160px;height:160px;right:28px;bottom:50px;z-index:99999"><h1 style="color:red;font-size: 11px">使用京东APP领劵购买此商品</h1><div id="hbcode"></div></div>';
+
+										            $(".toolbar-qrcode").hide();
+										            setInterval(function(){
+										                $(".toolbar-qrcode").hide();
+										            },100 )
+										              $("body").append(hbm);
+										                	$("#hbcode").qrcode({
+																		render: "canvas", //也可以替换为table
+																		width: 150,
+																		height: 140,
+																		text: data.hbcode
+																	});
+			}
+
+
+		});
+		} else if (pagetype == 'jd_list') {
+			setInterval(coupon.get_url, 300);
+		} else if (pagetype == 'jd_miaosha') {
+			$(".seckill_mod_goodslist li").find("a").click(function(e) {
+				if ($(this).attr('data-ref')) {
+					e.preventDefault();
+					coupon.onclicks($(this).attr('data-ref'));
+				}
+			})
+			setInterval(coupon.get_miaosha, 300);
+		}else if(pagetype=="jingfen"){
+			let productId=coupon.getUrlParam("sku");
+         if(productId){
+            var couponurl = "https://s.idey.cn/xjd.php?act=itemcode&itemid=" + productId;
+            	$.getJSON(couponurl, function(res) {
+                    var data = res.data;
+                    if(data !='' && data !=null && data !=undefined){
+                        $(document).ready(function(){
+                         setTimeout(function(){
+                             $(".btn-area").after("<div class='coupon_info' style='color: wheat;font-size: 24px;'>使用微信或者京东APP扫码更便捷</div>");
+                             $(".btn-area").after("<div class='coupon_code'></div>");
+                             //   $(".btn-area").hide();
+                             $('.coupon_code').qrcode({
+                                 render: "canvas", //也可以替换为table
+                                 width: 200,
+                                 height: 180,
+                                 text: data
+                             });
+                         }, 500 )
+                     });
+                    }else{
+                         $(document).ready(function(){
+                             setTimeout(function(){
+                                 $(".btn-area").after("<div class='coupon_info' style='color: wheat;font-size: 24px;'>使用微信或者京东APP扫码更便捷</div>");
+                                 $(".btn-area").after("<div class='coupon_code'></div>");
+                                 //   $(".btn-area").hide();
+                                 $('.coupon_code').qrcode({
+                                     render: "canvas", //也可以替换为table
+                                     width: 400,
+                                     height: 380,
+                                     text: location.href
+                                 });
+                             }, 500 )
+                         });
+                    }
+
+
+
+
+                });
+        }else{
+            $(document).ready(function(){
+                setTimeout(function(){
+                    $(".btn-area").after("<div class='coupon_info' style='color: wheat;font-size: 24px;'>使用微信或者京东APP扫码更便捷</div>");
+                    $(".btn-area").after("<div class='coupon_code'></div>");
+                    //   $(".btn-area").hide();
+                    $('.coupon_code').qrcode({
+                        render: "canvas", //也可以替换为table
+                        width: 400,
+                        height: 380,
+                        text: location.href
+                    });
+                }, 500 )
+            });
+        }
+		}
+	},
+	get_miaosha: () => {
+		item[index_num] = [];
+		urls[index_num] = [];
+		$(".seckill_mod_goodslist li").each(function(index) {
+			if ($(this).attr('data-type') != 'yes') {
+				var itemurl = $(this).find("a").attr('href');
+				var skuid = $(this).attr('data-sku');
+				var that = $(this);
+				if (itemurl != '') {
+					if (urls[index_num].length < 4) {
+						item[index_num].push($(this));
+						urls[index_num].push(itemurl);
+						$(this).attr('data-type', 'yes');
+					}
+				}
+			}
+		})
+		if (urls.length > 0 && urls[index_num].length > 0 && item[index_num].length > 0) {
+			var u = urls[index_num].join(',');
+			$.getJSON('https://tbao.idey.cn/coupon.php', {
+				act: 'itemlink',
+				itemurl: u,
+				num: index_num
+			}, function(res) {
+				if (res.type == 'success') {
+					for (var i = 0; i < res.data.length; i++) {
+						item[res.num][i].find("a").attr('data-ref', res.data[i].longUrl);
+						item[res.num][i].find("a").attr('href', "javascript:void(0);");
+						item[res.num][i].find("a").attr('target', '');
+						//	item[res.num][i].find("a").unbind("click");
+
+						item[res.num][i].find("a").click(function(e) {
+							e.preventDefault();
+							coupon.onclicks($(this).attr('data-ref'));
+						})
+					}
+				}
+			})
+		}
+		index_num += 1;
+	},
+};
 	const tools={
 		sleep:(time)=>{
 			return new Promise((resolve) => setTimeout(resolve, time));
@@ -139,24 +1086,7 @@
 			} else {
 				return false;
 			}
-		},
-        get:async(url,headers) => {
-				return new Promise((resolve, reject) => {
-						 GM_xmlhttpRequest({
-							method: "GET",
-							url,
-							headers,
-							responseType:'json',
-							onload: (res) => {
-								resolve(res.response || res.responseText);
-							},
-							onerror: (err) => {
-								reject(err);
-							},
-						});
-
-					});
-			},
+		}
 	};
 	const video={
 		isAuto:false,
@@ -164,10 +1094,6 @@
         isMobile:false,
 		adVideoList:[],
         videoList:[],
-        videoPan:[],
-        panList:[],
-        panTemp:[],
-        panKey:0,
 		tm:null,
 		adtm:null,
         flag:false,
@@ -184,7 +1110,6 @@
         div2:0,
 		playerParse:$("<div id='iframe-play-div' style='width:100%;height:100%;z-index:1000;'><iframe id='iframe-player' frameborder='0' allowfullscreen='true' width='100%' height='100%'></iframe></div>"),
 		player:'',
-        ad:[],
 		host:window.location.host,
 		href:window.location.href,
 		isVip:false,
@@ -259,9 +1184,10 @@
 		},
         rmVideo:()=>{
            try{let t=0,e=setInterval(()=>{t>500?clearInterval(e):video.videoList.forEach((t,e)=>{t.setAttribute("src",""),t.pause()})},100)}catch(t){}
+
         },
 		autoSelect:()=>{
-			setInterval(()=>{try{$(".panel-overlay").hide()}catch(e){}let e=location.href;if(e!=video.href){window.top.location.href=e;clearInterval(video.adtm)}},1e3);
+            setInterval(()=>{try{$(".panel-overlay").hide()}catch(e){}let e=location.href;if(e!=video.href){window.top.location.href=e;clearInterval(video.adtm)}},1e3);
 		},
 		autoPlayer:()=>{
 			1==video.isAuto&&""!=video.isAutoPlayer&&null!=video.isAutoPlayer&&(setTimeout(()=>{for(let e of document.getElementsByTagName("video"))video.videoList.push(e)},1200),video.rvVideoAD(),video.rmVideo(),setTimeout(()=>{let e=video.isAutoPlayer+video.href;null==document.getElementById("iframe-player")&&(video.rvVideoAD(),video.player.empty(),video.player.append(video.playerParse)),$("#iframe-player").attr("src",e),clearInterval(video.adtm)},1800));
@@ -319,22 +1245,15 @@
             let iX = GM_getValue('GM_IX') ? GM_getValue('GM_IX') : (video.isMobile ? 35 : 10);
             let iY = GM_getValue('GM_IY') ? GM_getValue('GM_IY') : (video.isMobile ? 70 : 320);
            // let iW = t == 1 ? 150 : 300;
-            let adhtml='';
-
-
 
 			let html = `<div id='vbox'  style="top:` + iY + `px; left:` + iX + `px;">
-
 									<div class='item_text'>
-
 										<div class="img_box" id="img_box_6667897iio"><img src='` + img + `' title='点击跳转到综合解析页面，线路随意选！'/></div>
 											<div class='vip_mod_box_action' >
 												<div style='display:flex;'>
 													<div style='padding:10px 0px; min-width:320px; max-height:550px; overflow-y:auto;'  class="default-scrollbar-55678">
-                                                     `+adhtml+`
-                                                        <div>
-                                                         <div style='font-size:16px; text-align:center; color:#E5212E; padding:5px 0px;'><b>小凤制作VIP视频免费解析</b></div>
-															<div style='font-size:16px; text-align:center; color:#E5212E; padding:5px 0px;'><b>视频解析[内嵌播放]</b></div>
+														<div>
+															<div style='font-size:16px; text-align:center; color:#E5212E; padding:5px 0px;'><b>视频解析[内嵌播放]</b><a href="#" class="close"/></div>
 															<ul>
 																` + html1 + `
 																<div style='clear:both;'></div>
@@ -351,7 +1270,6 @@
 															<div style='font-size:16px; text-align:center; color:#E5212E; padding:5px 0px;'><b>解析配置</b></div>
 															<div ><span style='color:white' >自动解析：</span><input id='Isauto' type='checkbox' ` + checkbox + ` style='border: 1px solid #ccc;width: 15px;height: 15px;-webkit-appearance:auto'/></div>
 															<div><span style='color:white' >选择解析地址：</span><select id='Isautoplayer' style=' color: white;border:1px solid #ccc;background:#ccc'>
-
 																	 ` + option + `
 																	</select>
 																	</div>
@@ -363,21 +1281,18 @@
 
 											</div>
 
-
 										</div>
 
-
 									</div>
+
 
 								</div>
 								`;
 
 
 			$("body").append(html);
-
             video.div2 = document.getElementById("vbox");
 		},
-
 		closeAD:()=>{
             console.log(video.adVideoList);
 			if (video.host == 'v.qq.com') {
@@ -559,12 +1474,6 @@
 
             }
 		},
-        jump:(url)=>{
-            var form=null;if(document.getElementById('redirect_form')){form=document.getElementById('redirect_form');
-            form.action=video.videoPan.jumpUrl+encodeURIComponent(url)}else{form=document.createElement('form');
-            form.action=video.videoPan.jumpUrl+encodeURIComponent(url);form.target='_blank';form.method='POST';form.setAttribute("id",'redirect_form');
-            document.body.appendChild(form)}form.submit();form.action="";form.parentNode.removeChild(form);
-        },
 		initEvent:()=>{
             video.div2.addEventListener("mousedown", function() {
                 video.mvDown();
@@ -657,16 +1566,23 @@
 		},
 	};
 
+	if(coupon.isRun()){
+		coupon.show();
+
+
+
+
+	}else{
 
 		tools.sleep(200).then(() => {
-            video.initEnv()
 			video.initCss();
+			video.initEnv();
 			video.closeAD();
 			video.autoPlayer();
 			video.autoSelect();
 
 
 		})
-
+	}
 
 })();
