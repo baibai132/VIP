@@ -1,0 +1,229 @@
+// ==UserScript==
+// @name          【小凤聋人制作 绿色图标】 🔥🔥🔥全网VIP视频免费破解，自动跳过广告🔥🔥🔥
+// @namespace    http://tampermonkey.net/
+// @version        更新:0.0.5 【2025年5月21日】
+// @description    全国vip视频解析, 外嵌解析，体验腾讯、爱奇艺、优酷等vip视频网站
+// @author        【小凤聋人制作 绿色图标】 🔥🔥🔥全网VIP视频免费破解，自动跳过广告🔥🔥🔥
+//@icon         https://qlogo2.store.qq.com/qzone/157903109/157903109/50?1663513516
+// @match             *://*.youku.com/*
+// @match             *://*.iqiyi.com/*
+// @match             *://*.iq.com/*
+// @match             *://*.le.com/*
+// @match             *://v.qq.com/*
+// @match             *://m.v.qq.com/*
+// @match             *://*.tudou.com/*
+// @match             *://*.mgtv.com/*
+// @match             *://tv.sohu.com/*
+// @match             *://film.sohu.com/*
+// @match             *://*.1905.com/*
+// @match             *://*.bilibili.com/*
+// @match             *://*.pptv.com/*
+
+
+// @include      *://*.zhihu.com/*
+// @include      *://bbs.csdn.net/*
+// @include      *://www.csdn.net/*
+// @include      *://blog.csdn.net/*/article/details/*
+// @include      *://*.blog.csdn.net/article/details/*
+// @include      *://*.youku.com/v_*
+// @include      *://www.iqiyi.com/*
+// @include      *://www.iqiyi.com
+// @include      *://*.iqiyi.com/v_*
+// @include      *://*.iqiyi.com/w_*
+// @include      *://*.iqiyi.com/a_*
+// @include      *://*.le.com/ptv/vplay/*
+// @include      *://v.qq.com/x/cover/*
+// @include      *://v.qq.com/x/page/*
+// @include      *://*.tudou.com/listplay/*
+// @include      *://*.tudou.com/albumplay/*
+// @include      *://*.tudou.com/programs/view/*
+// @include      *://*.mgtv.com/b/*
+// @include      *://film.sohu.com/album/*
+// @include      *://tv.sohu.com/v/*
+// @include      *://*.acfun.cn/v/*
+// @include      *://*.bilibili.com/video/*
+// @include      *://*.bilibili.com/anime/*
+// @include      *://*.bilibili.com/bangumi/play/*
+// @include      *://*.baofeng.com/play/*
+// @include      *://vip.pptv.com/show/*
+// @include      *://v.pptv.com/show/*
+
+
+// @require           https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js
+// @connect           api.bilibili.com
+// @grant             GM_info
+// @grant             GM_download
+// @run-at            document-idle
+// @grant             unsafeWindow
+// @grant             GM_addStyle
+// @grant             GM_openInTab
+// @grant             GM_getValue
+// @grant             GM_setValue
+// @grant             GM_xmlhttpRequest
+// @grant             GM_log
+// @charset		      UTF-8
+// @license           GPL License
+// ==/UserScript==
+
+/*
+*
+
+本脚本完全由本人原创，禁止抄袭全部代码, 如发现有人抄袭，欢迎举报，谢谢
+
+请勿用于任何商业用途，仅供学习交流
+
+*/
+
+(function() {
+    'use strict';
+
+    // 定义CSS变量
+    const style = document.createElement('style');
+    style.innerHTML = `
+    .video-parser-container {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        display: flex;
+        align-items: center;
+        z-index: 1000;
+    }
+    .video-parser-button {
+        padding: 10px 20px;
+        background-color: var(--button-bg-color, #00FF00);
+        color: var(--button-text-color, #000);
+        border: var(--button-border, none);
+        border-radius: var(--button-border-radius, 5px);
+        cursor: pointer;
+        font-size: var(--button-font-size, 16px);
+        font-family: var(--button-font-family, Arial, sans-serif);
+        transition: background-color 0.3s, transform 0.3s;
+    }
+    .video-parser-button:hover {
+        background-color: var(--button-hover-bg-color, #28a745);
+        transform: scale(1.05);
+    }
+    .video-parser-dropdown {
+        margin-left: 10px;
+    }
+    .video-parser-dropdown select {
+        padding: 10px 20px;
+        background-color: #000;
+        color: var(--dropdown-text-color, #007bff);
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        opacity: 1;
+    }
+    .video-parser-dropdown select:focus {
+        outline: none;
+    }
+    `;
+    document.head.appendChild(style);
+
+    // 创建一个容器元素
+    const container = document.createElement('div');
+    container.className = 'video-parser-container';
+
+    // 创建一个按钮元素
+    const button = document.createElement('button');
+    button.innerText = '解析播放';
+    button.className = 'video-parser-button';
+
+    // 定义不同网站的CSS变量
+    const cssVariables = {
+        'v.qq.com': {
+            '--button-bg-color': '#007bff',
+            '--button-text-color': '#fff',
+            '--button-border-radius': '10px',
+            '--button-font-size': '18px',
+            '--button-hover-bg-color': '#0056b3',
+            '--dropdown-text-color': '#fff'
+        },
+        'iqiyi.com': {
+            '--button-bg-color': '#28a745',
+            '--button-text-color': '#fff',
+            '--button-border-radius': '0',
+            '--button-font-size': '16px',
+            '--button-hover-bg-color': '#218838',
+            '--dropdown-text-color': '#fff'
+        },
+        'youku.com': {
+            '--button-bg-color': '#800080',
+            '--button-text-color': '#FFFFFF',
+            '--button-border-radius': '5px',
+            '--button-font-size': '16px',
+            '--button-hover-bg-color': '#660066',
+            '--dropdown-text-color': '#FFFFFF',
+        }
+    };
+
+    // 应用相应的CSS变量
+    const hostname = window.location.hostname;
+    const siteVars = cssVariables[hostname];
+    if (siteVars) {
+        for (const [key, value] of Object.entries(siteVars)) {
+            button.style.setProperty(key, value);
+        }
+    }
+
+    // 定义解析接口列表
+    const parseInterfaces = [
+        { name: '虾米', url: 'https://jx.xmflv.cc/?url=' },
+        { name: '夜幕', url: 'https://www.yemu.xyz/?url=' },
+        { name: 'CK', url: 'https://www.ckplayer.vip/jiexi/?url=' },
+        { name: 'qianqi', url: 'https://api.qianqi.net/vip/?url=' },
+        { name: '8090', url: 'https://www.8090g.cn/?url=' },
+        { name: 'IK9', url: 'https://yparse.ik9.cc/index.php?url=' },
+        { name: 'PM', url: 'https://www.playm3u8.cn/jiexi.php?url=' },
+        { name: '？？', url: 'https://jx.m3u8.tv/jiexi/?url=' },
+        { name: '大米', url: 'https://jx.dmflv.cc/?url=' },
+        { name: '云云', url: 'https://jx.77flv.cc/?url=' },
+        { name: '七哥', url: 'https://jx.nnxv.cn/tv.php?url=' },
+        { name: '云析', url: 'https://jx.yparse.com/index.php?url=' },
+        { name: '冰豆', url: 'https://jx.xymp4.cc/?url=' },
+        { name: 'Ckplayer', url: 'https://bd.jx.cn/?url=' },
+        { name: '零点', url: 'http://www.jzmhtt.com/zdy/vip/?url=' },
+        { name: '剖元', url: 'https://www.pouyun.com/?url=' },
+        { name: '盘古', url: 'https://www.pangujiexi.com/jiexi/?url=' },
+        { name: '973', url: 'https://jx.973973.xyz/?url=' },
+        { name: '螃蟹解析', url: 'https://jx.pxjx.cc/?url=' },
+        { name: '红狐资源网', url: 'https://rdfplayer.mrgaocloud.com/player/?url=' },
+
+
+    ];
+
+    // 创建下拉菜单
+    const dropdown = document.createElement('select');
+    dropdown.className = 'video-parser-dropdown';
+
+    parseInterfaces.forEach((interfaceItem, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.text = interfaceItem.name;
+        dropdown.appendChild(option);
+    });
+
+    // 点击按钮时触发的事件
+    button.addEventListener('click', () => {
+        const selectedIndex = dropdown.value;
+        const selectedInterface = parseInterfaces[selectedIndex];
+        const currentUrl = window.location.href;
+
+        if (!selectedInterface.url) {
+            alert('当前选择的解析接口URL为空，请联系开发者更新');
+            return;
+        }
+
+        const parseUrl = selectedInterface.url + encodeURIComponent(currentUrl);
+        window.open(parseUrl, '_blank');
+    });
+
+    // 将按钮和下拉菜单添加到容器中
+    container.appendChild(button);
+    container.appendChild(dropdown);
+
+    // 将容器添加到页面中
+    document.body.appendChild(container);
+})();
