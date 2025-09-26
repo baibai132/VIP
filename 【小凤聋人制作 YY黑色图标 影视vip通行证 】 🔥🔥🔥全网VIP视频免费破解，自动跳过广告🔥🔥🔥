@@ -2,7 +2,7 @@
 // @name              【小凤聋人制作 YY黑色图标 影视vip通行证 】 🔥🔥🔥全网VIP视频免费破解，自动跳过广告🔥🔥🔥
 // @name:zh-CN        【小凤聋人制作 YY黑色图标 影视vip通行证 】 🔥🔥🔥全网VIP视频免费破解，自动跳过广告🔥🔥🔥
 // @namespace         http://tampermonkey.net/
-// @version           更新：【2025年9月26日】 版本9.0
+// @version           更新：【2025年9月26日】 版本9.026
 // @description       支持：腾讯、爱奇艺、优酷、芒果、pptv、乐视、bilibili等其它网站视频VIP解析，影视vip解析.3.2版优化ui界面反应迟钝，加载解析接口慢的问题，小调整vip图标
 // @description:zh-CN 支持：腾讯、爱奇艺、优酷、芒果、pptv、乐视、bilibili等其它网站视频VIP解析，影视vip解析
 //@icon         https://qlogo2.store.qq.com/qzone/157903109/157903109/50?1663513516
@@ -146,32 +146,32 @@ const superVip = (function () {
         autoPlayerKey: "auto_player_key" + window.location.host,
         autoPlayerVal: "auto_player_value_" + window.location.host,
         videoParseList: [
-        {"name": "虾米", "type": "1-3", "url": "https://jx.xmflv.com/?url="},
-		{"name": "虾米2", "type": "1-3", "url": "https://jx.xmflv.cc/?url="},
-		{"name": "夜幕", "type": "1-3", "url": "https://www.yemu.xyz/?url="},
-        {"name": "CK", "type": "1-3", "url": "https://www.ckplayer.vip/jiexi/?url="},
-		{"name": "冰豆", "type": "1-3", "url": "https://bd.jx.cn/?url="},
-		{"name":"8090","type": "1-3","url":"https://www.8090g.cn/?url="},
-		{"name": "IK9", "type": "1-3", "url": "https://yparse.ik9.cc/index.php?url="},
-		{"name": "PM", "type": "1-3", "url": "https://www.playm3u8.cn/jiexi.php?url="},
-        {"name": "jiexi", "type": "1-3", "url": "https://jiexi.site/?url="},
-		{"name": "七哥1", "type": "1-3", "url": "https://jx.nnxv.cn/tv.php?url="},
-        {"name": "七哥2", "type": "1-3", "url": "https://jx.mmkv.cn/tv.php?url="},
-		{"name": "云析", "type": "1-3", "url": "https://jx.yparse.com/index.php?url="},
-		{"name": "Ckplayer", "type": "1-3", "url": "https://www.ckplayer.vip/jiexi/?url="},
-        {"name": "零点", "type": "1-3", "url": "http://www.jzmhtt.com/zdy/vip/?url="},
-        {"name": "神哥", "type": "1-3", "url": " https://json.ovvo.pro/jx.php?url="},
-		{"name": "剖元", "type": "1-3", "url": "https://www.pouyun.com/?url="},
-        {"name": "？？", "type": "1-3", "url": "https://jx.m3u8.tv/jiexi/?url="},
-        {"name": "咸鱼", "type": "1-3", "url": "https://jx.xymp4.cc/?url="},
-        {"name": "Player-JY", "type": "1-3", "url": "https://jx.playerjy.com/?url="},
-        {"name": "大米", "type": "1-3", "url": "https://jx.dmflv.cc/?url="},
-        {"name": "云云", "type": "1-3", "url": "https://jx.77flv.cc/?url="},
-        {"name": "螃蟹解析", "type": "1-3", "url": "https://jx.pxjx.cc/?url="},
-        {"name": "红狐资源网", "type": "3", "url": "https://rdfplayer.mrgaocloud.com/player/?url="},
-
-           {"name": "!后面重复", "type": "1,3", "url": ""},
-
+    {"name": "虾米", "type": "1,3", "url": "https://jx.xmflv.com/?url="},
+	{"name": "虾米2", "type": "1,3", "url": "https://jx.xmflv.cc/?url="},
+    {"name":"FF","type": "1,3", "url":"https://pl.aszzys.com/player/ec.php?code=ffm3u8&if=1&url="},
+    {"name":"HM","type": "1,3", "url":"https://pl.aszzys.com/player/ec.php?code=heimuer&if=1&url="},
+    {"name":"LZ","type": "1,3", "url":"https://pl.aszzys.com/player/ec.php?code=lzm3u8&if=1&url="},
+	{"name": "夜幕", "type": "1,3", "url": "https://www.yemu.xyz/?url="},
+    {"name": "CK", "type": "1,3", "url": "https://www.ckplayer.vip/jiexi/?url="},
+	{"name": "冰豆", "type": "1,3", "url": "https://bd.jx.cn/?url="},
+	{"name":"8090","type": "1,3","url":"https://www.8090g.cn/?url="},
+	{"name": "IK9", "type": "1,3", "url": "https://yparse.ik9.cc/index.php?url="},
+	{"name": "PM", "type": "1,3", "url": "https://www.playm3u8.cn/jiexi.php?url="},
+    {"name": "jiexi", "type": "1,3", "url": "https://jiexi.site/?url="},
+	{"name": "七哥1", "type": "1,3", "url": "https://jx.nnxv.cn/tv.php?url="},
+    {"name": "七哥2", "type": "1,3", "url": "https://jx.mmkv.cn/tv.php?url="},
+	{"name": "云析", "type": "1,3", "url": "https://jx.yparse.com/index.php?url="},
+	{"name": "Ckplayer", "type": "1,3", "url": "https://www.ckplayer.vip/jiexi/?url="},
+    {"name": "零点", "type": "1,3", "url": "http://www.jzmhtt.com/zdy/vip/?url="},
+    {"name": "神哥", "type": "1,3", "url": " https://json.ovvo.pro/jx.php?url="},
+	{"name": "剖元", "type": "1,3", "url": "https://www.pouyun.com/?url="},
+    {"name": "？？", "type": "1,3", "url": "https://jx.m3u8.tv/jiexi/?url="},
+    {"name": "咸鱼", "type": "1,3", "url": "https://jx.xymp4.cc/?url="},
+    {"name": "Player-JY", "type": "1,3", "url": "https://jx.playerjy.com/?url="},
+    {"name": "大米", "type": "1,3", "url": "https://jx.dmflv.cc/?url="},
+    {"name": "云云", "type": "1,3", "url": "https://jx.77flv.cc/?url="},
+    {"name": "螃蟹解析", "type": "1-3", "url": "https://jx.pxjx.cc/?url="},
+    {"name": "红狐资源网", "type": "3", "url": "https://rdfplayer.mrgaocloud.com/player/?url="},
         ],
         playerContainers: [
             {
@@ -197,7 +197,7 @@ const superVip = (function () {
             },
             {host: "www.bilibili.com", container: "#player_module,#bilibiliPlayer,#bilibili-player", name: "Default", displayNodes: []},
             {host: "m.bilibili.com", container: ".player-wrapper,.player-container,.mplayer", name: "Default", displayNodes: []},
-            {host: "www.iqiyi.com", container: "#video", name: "Default", displayNodes: ["#playerPopup", "#vipCoversBox" ,"#video > div.covers_cloudCover__ILy8R.covers_pcw__jFO8q","div[class^=qy-header-login-pop]"]},
+            {host: "www.iqiyi.com", container: "#outlayer, .iqp-player-videolayer", name: "Default", displayNodes: ["#playerPopup", "#vipCoversBox" ,"#video > div.covers_cloudCover__ILy8R.covers_pcw__jFO8q","div[class^=qy-header-login-pop]"]},
             {
                 host: "m.iqiyi.com",
                 container: ".m-video-player-wrap,iqpdiv.iqp-player",
